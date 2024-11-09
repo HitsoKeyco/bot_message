@@ -6,8 +6,8 @@ import { Server as SocketIOServer } from 'socket.io';
 import winston from 'winston';
 import dotenv from 'dotenv';
 import { createFlow } from '@builderbot/bot';
-dotenv.config();
 
+dotenv.config();
 
 const main = async () => {
     
@@ -25,6 +25,7 @@ const main = async () => {
             methods: ["GET", "POST"]
         }
     });
+
 
     const logger = winston.createLogger({
         level: 'info',
@@ -100,6 +101,8 @@ const main = async () => {
         logger.info('✅ El bot a sido liberado.');        
         return res.end('Sesión cerrada')
     }));
+
+    
     
 };
 main();
