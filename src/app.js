@@ -6,13 +6,17 @@ import { Server as SocketIOServer } from 'socket.io';
 import winston from 'winston';
 import dotenv from 'dotenv';
 import { createFlow } from '@builderbot/bot';
+import { autenticarSocket } from '../utils/auth.js';
+
+
 
 dotenv.config();
 
 const main = async () => {
+
     
     //Variables de entorno
-    const { PORT, PORT_SOCKET_IO } = process.env;
+    const { PORT = 3010, PORT_SOCKET_IO = 3011 } = process.env;
 
     //--------------------------- SOCKET IO Y LOGGER CONFIG----------------------------------------------------------//
     // Crear un servidor HTTP
@@ -21,11 +25,17 @@ const main = async () => {
     // Crear una instancia de Socket.IO adjunta al servidor HTTP
     const io = new SocketIOServer(server, {
         cors: {
-            origin: '*', // Ajusta esto según tus necesidades de seguridad
-            methods: ["GET", "POST"]
+          origin: ['https://everchic.ec', 'https://www.everchic.ec'],
+          methods: ["GET", "POST"],
+          allowedHeaders: ["Content-Type", "Authorization"],
+          credentials: true
         }
-    });
-
+      });
+      
+      io.use((socket, next) => {
+        autenticarSocket(socket);
+        next();
+      });
 
     const logger = winston.createLogger({
         level: 'info',
@@ -106,3 +116,6 @@ const main = async () => {
     
 };
 main();
+
+
+
